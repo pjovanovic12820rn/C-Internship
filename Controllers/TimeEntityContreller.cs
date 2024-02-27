@@ -24,33 +24,27 @@ public class TimeEntriesController : Controller
     }
 
     [HttpGet("GetImageAsBase64")]
-    public async Task<IActionResult> GetImageAsBase64(){
-        var people = await _timeEntryService.GetTimeEntriesAsync();
+    public async Task<IActionResult> GetImageAsBase64()
+    {
 
-        List<Person> sortedPeople = people.Select(people => new Person { Name = people.Key, WorkingHours = Math.Round(people.Value.TotalHours, 2) })
-                                        .OrderBy(p => p.WorkingHours)
-                                        .ToList();
+        try
+        {
+            // mora biti u try catch bloku ukoliko pukne GetTimeEntriesAsync metoda da ima isti error handling
+            var people = await _timeEntryService.GetTimeEntriesAsync();
 
-        try{
-            var bitmap = _timeEntryService.GeneratePieChart(sortedPeople); 
-            // Encode the SKBitmap to a PNG and then to a Base64 string
-            using (var image = SKImage.FromBitmap(bitmap))
-            {
-            using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
-            {
-                var base64String = Convert.ToBase64String(data.ToArray());
+            List<Person> sortedPeople = people.Select(people => new Person { Name = people.Key, WorkingHours = Math.Round(people.Value.TotalHours, 2) })
+                                            .OrderBy(p => p.WorkingHours)
+                                            .ToList();
 
-                // Return the Base64 string in a JSON response
-                return Json(new { ImageData = base64String });
-            }
+            return Json(new { ImageData = _timeEntryService.GeneratePieChart(sortedPeople) });
         }
-        }
-        catch(Exception ex){
+        catch (Exception ex)
+        {
             return BadRequest(ex.Message);
         }
 
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetTimeEntries()
     {
@@ -60,9 +54,9 @@ public class TimeEntriesController : Controller
         List<Person> sortedPeople = people.Select(people => new Person { Name = people.Key, WorkingHours = Math.Round(people.Value.TotalHours, 2) })
                                                 .OrderBy(p => p.WorkingHours)
                                                 .ToList();
-        
-        
+
+
         return Ok(sortedPeople);
-    }    
+    }
 
 }

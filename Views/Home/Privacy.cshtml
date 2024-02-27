@@ -10,14 +10,17 @@
 
 @section Scripts {
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch('/api/TimeEntries/GetImageAsBase64')
-                .then(response => response.json())
-                .then(data => {
-                    // Set the src of the img element to the base64 encoded image string
-                    document.getElementById('base64Image').src = 'data:image/png;base64,' + data.ImageData;
-                })
-                .catch(error => console.error('Unable to get image.', error));
+        $(document).ready(function () {
+            $.ajax({
+                url: '/api/TimeEntries/GetImageAsBase64',
+                type: 'GET',
+                success: function (data) {
+                    document.getElementById('base64Image').src = 'data:image/png;base64,' + data.imageData;
+                },
+                error: function (error) {
+                    console.error("Error fetching data: ", error);
+                }
+            });
         });
     </script>
 }
