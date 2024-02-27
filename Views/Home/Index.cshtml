@@ -1,0 +1,77 @@
+﻿
+@model List<C_Internship.Models.Person>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Time Entries</title>
+    <style>
+        .less-than-100-hours {
+            background-color: #ffcccc; /* Light red, adjust color as needed */
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2>Employee Time Entries</h2>
+    <table id="timeEntriesTable" border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Total Time Worked (Hours)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be added here using jQuery -->
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '/api/TimeEntries',
+                type: 'GET',
+                success: function(data) {
+                    var html = "";
+                    data.forEach(function(person) {
+                        var rowClass = person.workingHours < 100 ? ' class="less-than-100-hours"' : '';
+                        html += "<tr" + rowClass + "><td>" + person.name + "</td><td>" + person.workingHours + "</td></tr>";
+                    });
+                    $('#timeEntriesTable tbody').html(html);
+                },
+                error: function(error) {
+                    console.error("Error fetching data: ", error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+@* 
+<h2>Time Entries</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<div id="timeEntries"></div>
+
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: '/api/TimeEntries',
+        type: 'GET',
+        success: function(data) {
+            var html = "";
+            console.log(data);
+            data.forEach(function(person) {
+                html += "<p>Employee Name: " + person.name + " " + person.workingHours + "</p>";
+            });
+            $('#timeEntries').html(html);
+        },
+        error: function(error) {
+            console.error("Error fetching data: ", error);
+        }
+    });
+});
+</script>
+ *@
