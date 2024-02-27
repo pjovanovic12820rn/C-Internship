@@ -49,29 +49,3 @@
     </script>
 </body>
 </html>
-
-@* 
-<h2>Time Entries</h2>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<div id="timeEntries"></div>
-
-<script>
-$(document).ready(function() {
-    $.ajax({
-        url: '/api/TimeEntries',
-        type: 'GET',
-        success: function(data) {
-            var html = "";
-            console.log(data);
-            data.forEach(function(person) {
-                html += "<p>Employee Name: " + person.name + " " + person.workingHours + "</p>";
-            });
-            $('#timeEntries').html(html);
-        },
-        error: function(error) {
-            console.error("Error fetching data: ", error);
-        }
-    });
-});
-</script>
- *@

@@ -43,9 +43,37 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Bitmap.Net": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "HarfBuzzSharp": {
+              "target": "Package",
+              "version": "[8.3.0-preview.2.1, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "OxyPlot.Core": {
+              "target": "Package",
+              "version": "[2.1.2, )"
+            },
+            "OxyPlot.SkiaSharp": {
+              "target": "Package",
+              "version": "[2.1.2, )"
+            },
+            "SkiaSharp": {
+              "target": "Package",
+              "version": "[2.88.7, )"
+            },
+            "SkiaSharp.NativeAssets.MacOS": {
+              "target": "Package",
+              "version": "[3.0.0-preview.2.1, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[5.0.3, )"
             }
           },
           "imports": [

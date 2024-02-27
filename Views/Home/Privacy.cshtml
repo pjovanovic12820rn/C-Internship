@@ -1,6 +1,23 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy!";
+    ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
+<h2>@ViewData["Title"]</h2>
 <p>Use this page to detail your site's privacy policy.</p>
+
+<!-- Image placeholder -->
+<img id="base64Image" src="" alt="Pie Chart" style="max-width: 100%; height: auto;"/>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/TimeEntries/GetImageAsBase64')
+                .then(response => response.json())
+                .then(data => {
+                    // Set the src of the img element to the base64 encoded image string
+                    document.getElementById('base64Image').src = 'data:image/png;base64,' + data.ImageData;
+                })
+                .catch(error => console.error('Unable to get image.', error));
+        });
+    </script>
+}

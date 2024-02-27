@@ -1,11 +1,23 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.IO;
+using System.Drawing.Imaging;
+using System.Drawing;
 using Newtonsoft.Json;
 using C_Internship.Models;
+using OxyPlot;
+using OxyPlot.Series;
+using OxyPlot.SkiaSharp;
+using SkiaSharp;
+using Microsoft.AspNetCore.Routing.Constraints;
+using System.Collections.Generic;
+using System.Linq;
 
-public class TimeEntryService
+
+    public class TimeEntryService
 {
     private readonly HttpClient _httpClient;
     private const string ApiUrl = "https://rc-vault-fap-live-1.azurewebsites.net/api/gettimeentries?code=vO17RnE8vuzXzPJo5eaLLjXjmRW07law99QTD90zat9FfOQJKKUcgQ==";
@@ -16,8 +28,7 @@ public class TimeEntryService
         _httpClient = httpClient;
     }
 
-    public async Task<Dictionary<string, TimeSpan>> GetTimeEntriesAsync()
-    {
+    public async Task<Dictionary<string, TimeSpan>> GetTimeEntriesAsync(){
         var request = new HttpRequestMessage(HttpMethod.Get, ApiUrl);
         request.Headers.Add("Authorization", $"Bearer {ApiKey}");
 
@@ -45,4 +56,43 @@ public class TimeEntryService
 
         return myDictionary;
     }
+
+    public SKBitmap GeneratePieChart(List<Person> people){
+    var model = new PlotModel { Title = "Total Time Worked by Employee" };
+    //model.Background = OxyColor.FromRgb(255, 255, 255); 
+    var pieSeries = new PieSeries { StrokeThickness = 2.0, InsideLabelPosition = 0.8, AngleSpan = 360, StartAngle = 0 };
+
+    double totalTime = people.Sum(e => e.WorkingHours);
+    foreach (var employee in people)
+    {
+        double percentage = (employee.WorkingHours / totalTime) * 100;
+        pieSeries.Slices.Add(new PieSlice(employee.Name, percentage) { IsExploded = false });
+    }
+
+    model.Series.Add(pieSeries);
+    
+    var width = 600;
+    var height = 400;
+    try{
+    var bitmap = new SKBitmap(width, height);
+    var canvas = new SKCanvas(bitmap);
+    canvas.Clear(SKColors.White);
+    
+    var renderContext = new SkiaRenderContext()
+    {
+        SkCanvas = canvas
+    };
+
+    //model.Update(true);
+    //model.Render(renderContext, width, height);
+
+    return bitmap; 
+    }
+    catch(Exception){
+        throw;
+    }
+   
+
+    
+}
 }
